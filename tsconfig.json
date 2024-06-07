@@ -13,6 +13,6 @@
   "include": [
     "./*.js",
     "src/**/*.ts",
-    "test/**/*.ts", "src/core/service/mongoUserServ.tsx",
+    "test/**/*.ts", "src/core/service/mongoUserServ.ts",
   ],
 }
