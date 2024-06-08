@@ -14,6 +14,11 @@ export class MongoUserService {
         return result;
     }
 
+    public async getAllUsers(){
+        const userList  = await this.userRepo.getAllUsers();
+        return userList;
+    }
+
     public async userExists(email:string){
         const result = await this.userRepo.getUserByEmail(email)
         return result != null
@@ -43,6 +48,9 @@ export class MongoUserService {
         else{return false}
     }
 
-
+    public async updateUser(id: string, accessLevel: string){
+        const result  = await this.userRepo.updateUser(id, accessLevel);
+        return result;
+    }
     
 }

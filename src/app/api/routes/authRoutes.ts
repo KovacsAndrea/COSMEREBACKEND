@@ -27,8 +27,9 @@ mongoUserRouter.get("/user", async(_req, _res, _next) => {
         const token = _req.headers["authorization"];
         if(token){
             const decoded = jwt.verify(token, JWT_SECRET) as any;
+            const user = await mongoUserServ.getUserByEmail(decoded.email);
             _res.status(200).json({
-                decoded: decoded
+                user:user
             })
         }
         else{_res.status(400).json({ error: "Invalid token." });}
@@ -36,6 +37,32 @@ mongoUserRouter.get("/user", async(_req, _res, _next) => {
         _res.status(400).json({ error: "Invalid token." });
     }
 })
+
+
+mongoUserRouter.put("/:userId", async(_req, _res, _next) => {
+    try{
+        const userId = _req.params.userId;
+        const newAccessLevel = _req.body.accessLevel
+        console.log(newAccessLevel)
+        const result = await mongoUserServ.updateUser(userId, newAccessLevel)
+        _res.status(200).json({
+            result:result
+        })
+    }catch (ex) {
+        _res.status(400).json({ error: "Invalid token." });
+    }
+})
+
+mongoUserRouter.get("/list", async(_req, _res, _next) => {
+    try{
+        const userList = await mongoUserServ.getAllUsers();
+            _res.status(200).json({
+                userList: userList
+            })
+    }catch (ex) {
+        _res.status(400).json({ error: "Something went wrong while trying to get users." });
+    }
+}) 
 
 
 export const authenticateBridgemanJWT = async (_req: any, _res: any, _next: any) => {
