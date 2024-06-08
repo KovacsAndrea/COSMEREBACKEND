@@ -6,6 +6,7 @@ export interface User {
     username: string;
     email: string;
     password: string; // Store hashed passwords
+    accessLevel: string
 }
 
 export class User {
@@ -13,12 +14,14 @@ export class User {
     public username: string;
     public email: string;
     public password: string;
+    public accessLevel: string;
 
-    constructor(id: ObjectId, username: string, email: string, password: string) {
+    constructor(id: ObjectId, username: string, email: string, password: string, accessLevel: string) {
         this._id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.accessLevel = accessLevel;
     }
 
     // Method to hash passwords

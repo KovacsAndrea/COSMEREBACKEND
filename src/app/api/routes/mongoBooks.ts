@@ -1,9 +1,9 @@
 import express from "express"
 import { collections } from "../../../../database.service";
 import { mongoBookServ, rafoRepo } from "../../data";
-import { Book } from "../../../core/model/book";
 import { ObjectId } from "mongodb";
-import { authenticateJWT } from "./authRoutes";
+import { authenticateBridgemanJWT, authenticateKnightRadiantJWT, authenticateSurgebinderJWT } from "./authRoutes";
+import { Book } from "../../../core/model/book";
 
 export interface FilterData {
     planets: string[]; // Assuming planets is an array of strings
@@ -115,7 +115,7 @@ mongoBookRouter.get("/mockBook/book", async (_req, _res, _next) => {
 })
 
 ///add book 
-mongoBookRouter.post("/", async(_req, _res, _next) => {
+mongoBookRouter.post("/", authenticateKnightRadiantJWT, async(_req, _res, _next) => {
     const book = {
         _id: _req.body._id,
         _title: _req.body._title,
@@ -151,7 +151,7 @@ mongoBookRouter.post("/", async(_req, _res, _next) => {
 })
 
 ///delete book 
-mongoBookRouter.delete("/:ID", authenticateJWT, async (_req, _res, _next) => {
+mongoBookRouter.delete("/:ID", authenticateKnightRadiantJWT, async (_req, _res, _next) => {
     const ID = _req.params.ID;
     try{
         let result = await mongoBookServ.deleteBook(ID);
@@ -204,7 +204,7 @@ mongoBookRouter.get("/filter/current/data", async(_req, _res, _next) =>{
     }
 })
 
-mongoBookRouter.patch("/filter/current/data", authenticateJWT, async(_req, _res, _next) =>{
+mongoBookRouter.patch("/filter/current/data", authenticateSurgebinderJWT, async(_req, _res, _next) =>{
     try{
         const planetData = _req.body.planetData
         const systemData = _req.body.systemData
@@ -241,7 +241,7 @@ mongoBookRouter.get("/sort/current/data", async(_req, _res, _next) =>{
     }
 })
 
-mongoBookRouter.patch("/sort/current/data", authenticateJWT, async(_req, _res, _next) =>{
+mongoBookRouter.patch("/sort/current/data", authenticateSurgebinderJWT, async(_req, _res, _next) =>{
     try{
         const criteria = _req.body.criteria;
         const direction = _req.body.direction;
@@ -287,7 +287,7 @@ mongoBookRouter.get("/pagination/elementsPerPage", async(_req, _res, _next) =>{
     }
 })
 
-mongoBookRouter.patch("/pagination/elementsPerPage", authenticateJWT, async(_req, _res, _next) =>{
+mongoBookRouter.patch("/pagination/elementsPerPage", authenticateSurgebinderJWT, async(_req, _res, _next) =>{
     try{
         const elementsPerPage = _req.body.elementsPerPage;
         const result = await mongoBookServ.updateElementsPerPage(elementsPerPage)

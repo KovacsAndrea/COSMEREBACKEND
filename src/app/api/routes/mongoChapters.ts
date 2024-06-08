@@ -1,7 +1,7 @@
 import express from "express";
 import { mongoChapterServ } from "../../data";
 import { ObjectId } from "mongodb";
-import { authenticateJWT } from "./authRoutes";
+import { authenticateKnightRadiantJWT } from "./authRoutes";
 import { Chapter } from "../../../core/model/chapter";
 
 export const mongoChapterRouter = express.Router();
@@ -87,7 +87,7 @@ mongoChapterRouter.get("/format/:bookId", async(_req, _res, _next) => {
      }
 })
 
-mongoChapterRouter.post("/", authenticateJWT, async(_req, _res, _next) => {
+mongoChapterRouter.post("/", authenticateKnightRadiantJWT, async(_req, _res, _next) => {
     try{
         const chapter = new Chapter(
             parseInt(_req.body._chapter_number),
@@ -117,7 +117,7 @@ mongoChapterRouter.post("/", authenticateJWT, async(_req, _res, _next) => {
      }
 })
 
-mongoChapterRouter.delete("/:chapterId", authenticateJWT, async(_req, _res, _next) => {
+mongoChapterRouter.delete("/:chapterId", authenticateKnightRadiantJWT, async(_req, _res, _next) => {
     try{
         const chapterId = _req.params.chapterId;
         const result = await mongoChapterServ.deleteChapter(chapterId)

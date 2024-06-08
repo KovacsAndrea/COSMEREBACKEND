@@ -38,7 +38,7 @@ mongoUserRouter.get("/user", async(_req, _res, _next) => {
 })
 
 
-export const authenticateJWT = (_req: any, _res: any, _next: any) => {
+export const authenticateBridgemanJWT = async (_req: any, _res: any, _next: any) => {
     const token = _req.headers["authorization"];
     console.log(token)
     try {
@@ -48,9 +48,58 @@ export const authenticateJWT = (_req: any, _res: any, _next: any) => {
         console.log("DECODEEEEEED")
         console.log(decoded)
         _req.user = decoded;
-        _next();
+        if(_req.user){
+            const user = await mongoUserServ.getUserByEmail(_req.user.email);
+            if(user){
+                console.log(user)
+                if(["Bridgeman","Surgebinder", "Knight Radiant"].includes(user.accessLevel)){
+                    return _next();
+                }
+                else{
+                    return _res.status(400).json({ error: "Otherworldeeer!!!" });
+                }
+            }
+        }
     } catch (ex) {
-        _res.status(400).json({ error: "Invalid token." });
+        return _res.status(400).json({ error: "Invalid token." });
+    }
+};
+
+export const authenticateSurgebinderJWT = async (_req: any, _res: any, _next: any) => {
+    const token = _req.headers["authorization"];
+    console.log(token)
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        _req.user = decoded;
+        if(_req.user){
+            const user = await mongoUserServ.getUserByEmail(_req.user.email);
+            if(user){
+                console.log(user)
+                if(user.accessLevel == "Knight Radiant" || user.accessLevel == "Surgebinder"){ return _next();}
+                if(user.accessLevel == "Bridgeman"){ return _res.status(400).json({ error: "Gaz says GET BACK TO WORK YOU CREMLING!!!" });}
+                else{ return _res.status(400).json({ error: "Otherworlder?????"})}
+            }}
+    } catch (ex) {
+        return _res.status(400).json({ error: "Invalid token." });
+    }
+};
+
+export const authenticateKnightRadiantJWT = async (_req: any, _res: any, _next: any) => {
+    const token = _req.headers["authorization"];
+    console.log(token)
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        _req.user = decoded;
+        if(_req.user){
+            const user = await mongoUserServ.getUserByEmail(_req.user.email);
+            if(user){
+                if(user.accessLevel == "Knight Radiant"){return _next();}
+                if(user.accessLevel == "Surgebinder"){ return _res.status(400).json({ error: "The Vorin Church informs you of your heretic behaviour!!!" });}
+                if(user.accessLevel == "Bridgeman"){ return _res.status(400).json({ error: "Gaz says GET BACK TO WORK YOU CREMLING!!!" });}
+                else{_res.status(400).json({ error: "Otherworlder?????"})}
+            }}
+    } catch (ex) {
+        return _res.status(400).json({ error: "Invalid token." });
     }
 };
 
@@ -83,7 +132,7 @@ mongoUserRouter.post("/register", async(_req, _res, _next) => {
     
     const hPassword = await mongoUserServ.hashPassword(password)
     try{
-        const result = await mongoUserServ.addUser(new User(new ObjectId(), userName, email, hPassword))
+        const result = await mongoUserServ.addUser(new User(new ObjectId(), userName, email, hPassword, "Bridgeman"))
         _res.status(200).json({
             result: result
         });
@@ -126,16 +175,4 @@ mongoUserRouter.post("/login", async(_req, _res, _next) => {
         });
     }
 }) 
-
-mongoUserRouter.get("/protected", authenticateJWT, async (_req, _res, _next) => {
-    try {
-        _res.status(200).json({
-            message: "This is a protected route"
-        });
-    } catch (error) {
-        _res.status(500).json({
-            error: error
-        });
-    }
-});
 
