@@ -22,6 +22,6 @@ export class BookValidator {
         this.isValidContentForNewBook(book._planet) &&
         this.isValidContentForNewBook(book._system) &&
         this.isValidContentForNewBook(book._shard) &&
-        this.isValidStartDateForNewBook(book._startDate.toString())
+        this.isValidStartDateForNewBook(book._date.toString())
     }
 }

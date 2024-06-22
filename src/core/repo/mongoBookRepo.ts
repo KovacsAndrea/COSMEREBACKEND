@@ -60,7 +60,7 @@ export class MongoBookRepo {
         ]).toArray();
     
         const dateData = await collections.books?.aggregate([
-            { $group: { _id: "$_startDate", count: { $sum: 1 } } }
+            { $group: { _id: "$_date", count: { $sum: 1 } } }
         ]).toArray();
         
         await collections.filterCriteria?.updateOne(
@@ -159,9 +159,9 @@ export class MongoBookRepo {
             filterConditions.push({ _shard: { $in: shardFilterData } });
         }
         if (dateFilterData.length > 0) {
-            filterConditions.push({ _startDate: { $in: dateFilterData } });
+            filterConditions.push({ _date: { $in: dateFilterData } });
         }
-        // filterConditions.push({ _startDate: { $in: dateFilterData } });
+        // filterConditions.push({ _date: { $in: dateFilterData } });
         // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! CURRENT FILTER")
         // console.log(dateFilterData)
         // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! PLANETS")
@@ -309,7 +309,7 @@ export class MongoBookRepo {
             ]).toArray();
         
             const dateData = await collections.editedBooks?.aggregate([
-                { $group: { _id: "$_startDate", count: { $sum: 1 } } }
+                { $group: { _id: "$_date", count: { $sum: 1 } } }
             ]).toArray();
 
             const chartData = {
@@ -404,6 +404,10 @@ export class MongoBookRepo {
 
     public getMockBook(): Book {
         return new Book(new ObjectId(), '', '', '', '', '', 0);
+    }
+
+    public getMockID(): ObjectId {
+        return new ObjectId();
     }
 
     public async getSearchResult(searchText: string){

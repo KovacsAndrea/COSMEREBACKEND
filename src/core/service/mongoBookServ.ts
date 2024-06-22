@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Book } from "../model/book";
 import { MongoBookRepo } from "../repo/mongoBookRepo";
 
@@ -59,6 +60,9 @@ export class MongoBookServ {
 
     async getMockBook(){
         return this.bookRepo.getMockBook();
+    }
+    public getMockID(): ObjectId {
+        return this.bookRepo.getMockID();
     }
     //#endregion
 

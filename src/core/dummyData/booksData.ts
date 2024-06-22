@@ -94,6 +94,15 @@ export const dummyRafo: Book[] = [
         2016
     ),
     new Book(
+        new ObjectId('6627bab629ef994b226ba822'),
+        'Mistborn: Alloy of Law',
+        'The fourth Mistborn book, set in the Wax and Wayne era.',
+        'Scadrial',
+        'Scadrian System',
+        'Harmony',
+        2015
+    ),
+    new Book(
         new ObjectId('6627bab529ef994b226ba812'),
         'Mistborn: Shadows of Self',
         'The fifth Mistborn book, set in the Wax and Wayne era.',

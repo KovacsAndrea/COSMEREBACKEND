@@ -32,7 +32,7 @@ mongoUserRouter.get("/user", async(_req, _res, _next) => {
                 user:user
             })
         }
-        else{_res.status(400).json({ error: "Invalid token." });}
+        else{_res.status(400).json({ message: "Invalid token." });}
     }catch (ex) {
         _res.status(400).json({ error: "Invalid token." });
     }
@@ -55,6 +55,7 @@ mongoUserRouter.put("/:userId", async(_req, _res, _next) => {
 
 mongoUserRouter.get("/list", async(_req, _res, _next) => {
     try{
+        
         const userList = await mongoUserServ.getAllUsers();
             _res.status(200).json({
                 userList: userList
@@ -69,7 +70,6 @@ export const authenticateBridgemanJWT = async (_req: any, _res: any, _next: any)
     const token = _req.headers["authorization"];
     console.log(token)
     try {
-        
         console.log("DEEEEEEEECODING ")
         const decoded = jwt.verify(token, JWT_SECRET) as any;
         console.log("DECODEEEEEED")

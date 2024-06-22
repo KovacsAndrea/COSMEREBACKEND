@@ -1,6 +1,6 @@
 import express from "express"
 import { collections } from "../../../../database.service";
-import { mongoBookServ, rafoRepo } from "../../data";
+import { mongoBookRepo, mongoBookServ, rafoRepo } from "../../data";
 import { ObjectId } from "mongodb";
 import { authenticateBridgemanJWT, authenticateKnightRadiantJWT, authenticateSurgebinderJWT } from "./authRoutes";
 import { Book } from "../../../core/model/book";
@@ -114,6 +114,21 @@ mongoBookRouter.get("/mockBook/book", async (_req, _res, _next) => {
      }
 })
 
+///get mock book
+mongoBookRouter.get("/mockBook/mockID", async (_req, _res, _next) => {
+    try{
+        let id = mongoBookServ.getMockID();
+        _res.status(200).json({
+            mesage: "Getting mock book",
+            id: id
+        });
+    } catch (error) {
+        console.log()
+        _res.status(400).json({ error: error });
+     }
+})
+
+
 ///add book 
 mongoBookRouter.post("/", authenticateKnightRadiantJWT, async(_req, _res, _next) => {
     const book = {
@@ -123,9 +138,9 @@ mongoBookRouter.post("/", authenticateKnightRadiantJWT, async(_req, _res, _next)
         _planet: _req.body._planet,
         _system: _req.body._system,
         _shard: _req.body._shard,
-        _startDate: _req.body._startDate
+        _date: _req.body._date
     };
-    console.log("    ----------- THIS IS MY DATE         " + book._startDate)
+    console.log("    ----------- THIS IS MY DATE         " + book._date)
     const transformedBook = new Book(
         new ObjectId(book._id),
         book._title,
@@ -133,7 +148,7 @@ mongoBookRouter.post("/", authenticateKnightRadiantJWT, async(_req, _res, _next)
         book._planet,
         book._system,
         book._shard,
-        parseInt(book._startDate)
+        parseInt(book._date)
     );
     
     try{
@@ -346,11 +361,13 @@ mongoBookRouter.post("/localWrite", async (_req, _res, _next) => {
                 book._planet,
                 book._system,
                 book._shard,
-                book._startDate
+                book._date
             );
             const result = await collections.books.insertOne(transformedBook);
             if (result) {
                 console.log(`Successfully created a new book with id ${result.insertedId}`);
+                await mongoBookRepo.handleSortFilterViewCRUD();
+                console.log(`Successfully handled the view.`);
             } else {
                 console.error("Failed to create a new book.");
             }
@@ -370,6 +387,8 @@ mongoBookRouter.delete("/delete/deleteAll", async (_req, _res, _next) => {
         const result = await collections.books.deleteMany({});
         if (result.deletedCount !== undefined && result.deletedCount > 0) {
             console.log(`Successfully deleted ${result.deletedCount} books.`);
+            await mongoBookRepo.handleSortFilterViewCRUD();
+            console.log(`Successfully handled the view.`);
             _res.status(200).json({ message: `Successfully deleted ${result.deletedCount} books.` });
         } else {
             console.error("Failed to delete books or no books found.");

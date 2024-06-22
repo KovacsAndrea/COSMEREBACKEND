@@ -132,7 +132,7 @@ export class BookServ implements BookIServ{
             }
         if(!(dates.length === this.dataRepo.getDates().length ||
             dates.length === 0)){
-                result = result.filter(book => dates.includes(book._startDate.toString()));
+                result = result.filter(book => dates.includes(book._date.toString()));
             }
         return result;
     }
@@ -153,7 +153,7 @@ export class BookServ implements BookIServ{
                 books.sort((book1, book2) => book1._shard.localeCompare(book2._shard))
             }
             if(this.sortCriteria == "Dates"){
-                books.sort((book1, book2) => book1._startDate - book2._startDate)
+                books.sort((book1, book2) => book1._date - book2._date)
                 console.log("SORTAM TATI")
             }
         }
@@ -172,7 +172,7 @@ export class BookServ implements BookIServ{
                 books.sort((book1, book2) => book2._shard.localeCompare(book1._shard))
             }
             if(this.sortCriteria == "Dates"){
-                books.sort((book1, book2) => book2._startDate - book1._startDate)
+                books.sort((book1, book2) => book2._date - book1._date)
             }
         }
         return books
@@ -342,7 +342,7 @@ export class BookServ implements BookIServ{
         let planets = [...new Set(this.rafoRepo.getAllBooks().map(book => book._planet))];
         let systems = [...new Set(this.rafoRepo.getAllBooks().map(book => book._system))];
         let shards = [...new Set(this.rafoRepo.getAllBooks().map(book => book._shard))];
-        let startDates = [...new Set(this.rafoRepo.getAllBooks().map(book => book._startDate))];
+        let startDates = [...new Set(this.rafoRepo.getAllBooks().map(book => book._date))];
         planets.forEach(planet => {
             if (!this.dataRepo.getPlanets().includes(planet)) {
                 this.dataRepo.addPlanet(planet);
@@ -371,7 +371,7 @@ export class BookServ implements BookIServ{
         let planets = [...new Set(this.rafoRepo.getAllBooks().map(book => book._planet))];
         let systems = [...new Set(this.rafoRepo.getAllBooks().map(book => book._system))];
         let shards = [...new Set(this.rafoRepo.getAllBooks().map(book => book._shard))];
-        let startDates = [...new Set(this.rafoRepo.getAllBooks().map(book => book._startDate))];
+        let startDates = [...new Set(this.rafoRepo.getAllBooks().map(book => book._date))];
         this.dataRepo.getPlanets().forEach(planet => {
             if (!planets.includes(planet)) {
                 this.dataRepo.deletePlanet(planet);

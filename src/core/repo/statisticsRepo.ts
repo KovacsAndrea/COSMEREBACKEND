@@ -74,7 +74,7 @@ export class StatisticsRepo {
     public getChartDataForDates(books: Book[]) {
         const dateCounts: Record<number, number> = {};
         books.forEach(book => {
-            const year = book._startDate;
+            const year = book._date;
             if (year in dateCounts) {
                 dateCounts[year]++;
             } else {

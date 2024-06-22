@@ -8,7 +8,7 @@ export interface Book {
     _planet: string;
     _system: string;
     _shard: string;
-    _startDate: number;
+    _date: number;
     _chapterFormat?: string
 }
 
@@ -19,7 +19,7 @@ export class Book implements Book{
     _planet: string;
     _system: string;
     _shard: string; 
-    _startDate: number; 
+    _date: number; 
     _chapterFormat?: string;
 
     constructor(
@@ -38,7 +38,7 @@ export class Book implements Book{
             this._planet = planet; 
             this._system = system;
             this._shard = shard;
-            this._startDate = startDate; 
+            this._date = startDate; 
             this._chapterFormat = chapterFormat;
         }
 
@@ -50,7 +50,7 @@ export class Book implements Book{
                this._planet === other._planet &&
                this._system === other._system &&
                this._shard === other._shard &&
-               this._startDate === other._startDate;
+               this._date === other._date;
     }
 
     public toString(): string {
@@ -59,7 +59,7 @@ export class Book implements Book{
         Planet: ${this._planet}\n 
         System: ${this._system}\n 
         Shard: ${this._shard}\n 
-        Start Date: ${this._startDate}\n`;
+        Start Date: ${this._date}\n`;
     }
 
 }
